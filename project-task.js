@@ -33,9 +33,26 @@ const readlineSync = require('readline-sync');
 let animals = [];
 let fees = [];
 function addAnimal(name, fee) {
-    if (!name || fee < 0) {
-        throw new Error("Invalid animal name or adoption fee!");
+
+    //check for animal type to be empty or not a string (or number)
+    let nameInvalid = (typeof name !== "string" || name.trim() === "" || !isNaN(Number(name))); 
+
+    //check for fee to be a non-number or less than $1
+    let feeInvalid = (isNaN(fee) || fee < 1); 
+
+    //throw unique error based on user entry validation
+    if (nameInvalid && feeInvalid) {
+        throw new Error("Invalid animal name and adoption fee!");
     }
+
+    if (nameInvalid) {
+        throw new Error("Invalid animal name!");
+    }
+
+    if (feeInvalid) {
+        throw new Error("Invalid adoption fee!");
+    }
+
     animals.push(name);
     fees.push(fee);
 }
@@ -55,13 +72,25 @@ while (true) {
         break;
     }
     if (action === "add") {
-        let animal = readlineSync.question("Enter the animal's name: ");
-        let fee = Number(readlineSync.question("Enter the adoption fee: "));
-        addAnimal(animal, fee);
-        console.log(`${animal} added with a fee of $${fee}.`);
+
+        //add try/catch for error message
+        try{
+            let animal = readlineSync.question("Enter the animal's name: ");
+            let fee = Number(readlineSync.question("Enter the adoption fee: "));
+            addAnimal(animal, fee);
+            console.log(`${animal} added with a fee of $${fee}.`);
+        } catch (err){
+            console.log(err.message);
+        }
     } else if (action === "fee") {
-        let animal = readlineSync.question("Enter the animal's name to find its adoption fee: ");
-        console.log(`${animal}'s adoption fee is $${getAdoptionFee(animal)}.`);
+
+        //add try/catch for error message
+        try{
+            let animal = readlineSync.question("Enter the animal's name to find its adoption fee: ");
+            console.log(`${animal}'s adoption fee is $${getAdoptionFee(animal)}.`);
+        } catch (err){
+            console.log(err.message);
+        }
     } else {
         console.log("Invalid action. Please choose 'add', 'fee', or 'exit'.");
     }
@@ -73,12 +102,12 @@ while (true) {
 Problems to Solve
 
 Invalid Input Errors:
-  What happens if the user provides a negative adoption fee or leaves the name blank?
-  What happens if the user tries to find the fee for an animal that hasn’t been added?
+  What happens if the user provides a negative adoption fee or leaves the name blank? (DONE)
+  What happens if the user tries to find the fee for an animal that hasn’t been added? (DONE)
 
 Code Flow Problems:
-  What happens if the program throws an exception? Does the rest of the code continue running?
+  What happens if the program throws an exception? Does the rest of the code continue running? (DONE)
 
 Structured Exception Handling:
-  Add try/catch blocks to handle the above errors gracefully.
+  Add try/catch blocks to handle the above errors gracefully. (DONE)
 */
